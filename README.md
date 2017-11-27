@@ -1,2 +1,2 @@
 # Eet
-This is NOT and agar.io clone
+This is NOT an agar.io clone

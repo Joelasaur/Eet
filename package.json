@@ -1,0 +1,27 @@
+{
+  "name": "eet",
+  "version": "1.0.0",
+  "description": "This is NOT an agar.io clone",
+  "main": "server.js",
+  "scripts": {
+    "test": "mocha",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Joelasaur/Eet.git"
+  },
+  "author": "Joel Whalen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Joelasaur/Eet/issues"
+  },
+  "homepage": "https://github.com/Joelasaur/Eet#readme",
+  "dependencies": {
+    "express": "^4.16.2",
+    "mocha": "^4.0.1",
+    "node-uuid": "^1.4.8",
+    "nodemon": "^1.12.1",
+    "socket.io": "^2.0.4"
+  }
+}
