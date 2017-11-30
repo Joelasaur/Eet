@@ -23,6 +23,7 @@
     "mongodb": "^2.2.33",
     "node-uuid": "^1.4.8",
     "nodemon": "^1.12.1",
-    "socket.io": "^2.0.4"
+    "socket.io": "^2.0.4",
+    "spectrum-colorpicker": "^1.8.0"
   }
 }

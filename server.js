@@ -2,6 +2,7 @@
 var express = require("express");
 var app = express();
 
+
 var http = require("http");
 
 //We are getting an instance of a Node HTTP (web) server here.
@@ -20,11 +21,27 @@ var io = socketio(server);
 app.use(express.static("pub"));
 var UUID 			= require('node-uuid');
 var gameport		= process.env.PORT || 4004;
+var mongoClient 	= require("mongodb").MongoClient;
+var ObjectId 		= require("mongodb").ObjectId;
 
 var
 	Eet 			= require("./src/Eet.js"),
 	Player 			= require("./src/Player.js"),
 	GameBoard 		= require("./src/GameBoard.js");
+
+var shop;
+var url = 'mongodb://localhost:27017/Eet';
+mongoClient.connect(url, function(err, database) {
+	if(err) {
+		console.log("There was a problem connecting to the database.");
+		throw err;
+	}
+	else {
+		console.log("Connected to Mongo.");
+		shop = database;
+	}
+});
+
 
 //Every time a client connects (visits the page) this function(socket) {...} gets executed.
 //The socket is a different object each time a new client connects.
@@ -46,9 +63,6 @@ io.on("connection", function(socket) {
 		console.log('\t socket.io:: client disconnected ' + socket.userid );
 	});
 
-	var player1 = new Player("Joel", socket.userid);
-
-	console.log("Your name is " + player1.name + ", and your id is " + player1.id);
 });
 
 server.listen(gameport, function() {

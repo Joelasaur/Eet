@@ -1,4 +1,7 @@
 var socket = io();
+$("#colorpicker").spectrum({
+	color: "#f00"
+});
 
 $(function() {
 	socket.on('onconnected', function( data ) {
