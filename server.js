@@ -18,27 +18,31 @@ var socketio = require("socket.io");
 var io = socketio(server);
 
 //Just for static files (like usual).  Eg. index.html, client.js, etc.
-app.use(express.static("pub"));
+
 var UUID 			= require('node-uuid');
 var gameport		= process.env.PORT || 4004;
 var mongoClient 	= require("mongodb").MongoClient;
 var ObjectId 		= require("mongodb").ObjectId;
+var bodyParser 		= require("body-parser");
+var Eet 			= require("./src/Eet.js");
+var Player 			= require("./src/Player.js");
 
-var
-	Eet 			= require("./src/Eet.js"),
-	Player 			= require("./src/Player.js"),
-	GameBoard 		= require("./src/GameBoard.js");
-
-var shop;
+var shop = {};
+var game = {};
 var url = 'mongodb://localhost:27017/Eet';
+
+app.use(express.static("pub"));
+app.use(bodyParser.urlencoded({extended: false})); //we can use req.body
+
 mongoClient.connect(url, function(err, database) {
 	if(err) {
 		console.log("There was a problem connecting to the database.");
 		throw err;
 	}
 	else {
-		console.log("Connected to Mongo.");
+		console.log("Connected to Mongo and now creating server.");
 		shop = database;
+		game = new Eet(shop);
 	}
 });
 
@@ -61,6 +65,13 @@ io.on("connection", function(socket) {
 	//When this client disconnects
 	socket.on('disconnect', function () {
 		console.log('\t socket.io:: client disconnected ' + socket.userid );
+	});
+
+	socket.on('enter', function (playerInfo) {
+		console.log("Info sent from client: " + playerInfo);
+		var plyr = new Player(playerInfo.name, socket.userid);
+		game.joinGame(plyr);
+		console.log(plyr.name + " has successfully joined the game.");
 	});
 
 });

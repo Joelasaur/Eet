@@ -1,7 +1,4 @@
 var socket = io();
-$("#colorpicker").spectrum({
-	color: "#f00"
-});
 
 $(function() {
 	socket.on('onconnected', function( data ) {
@@ -9,3 +6,10 @@ $(function() {
 		console.log( 'Connected successfully to the socket.io server. My server side ID is ' + data.id );
 	});
 });
+
+function start() {
+	$("#enterGame").click(function () {
+		socket.emit("enter", {name: $("playerName").val()});
+	});
+}
+$(start);

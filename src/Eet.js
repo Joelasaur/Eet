@@ -1,13 +1,16 @@
 var GameBoard = require("./GameBoard.js");
 
 class Eet {
-	constructor() {
+
+	// shopDB is a MongoDB database 
+	constructor(shopDB) {
+		this.shop = shopDB;
 		this.board = new GameBoard();
-		this.shop = {};
 	}
 
 	joinGame(player) {
 		this.board.addPlayer(player);
+		this.shop.collection("players").insertOne({UUID: player.id, name: player.name, highScore: 1})
 	}
 }
 
