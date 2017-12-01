@@ -10,6 +10,7 @@ class Eet {
 
 	joinGame(player) {
 		this.board.addPlayer(player);
+		//TODO: Database interactions need their own functions. This line needs to go somewhere else.
 		this.shop.collection("players").insertOne({UUID: player.id, name: player.name, highScore: 1})
 	}
 }

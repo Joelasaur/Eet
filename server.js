@@ -71,7 +71,7 @@ io.on("connection", function(socket) {
 		console.log("Info sent from client: " + playerInfo);
 		var plyr = new Player(playerInfo.name, socket.userid);
 		game.joinGame(plyr);
-		console.log(plyr.name + " has successfully joined the game.");
+		console.log(plyr.name + " has successfully joined the game and chose this color: " + playerInfo.color);
 	});
 
 });

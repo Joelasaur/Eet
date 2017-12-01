@@ -1,4 +1,5 @@
 var socket = io();
+var DEFAULT_COLOR = "#f00";
 
 $(function() {
 	socket.on('onconnected', function( data ) {
@@ -8,8 +9,20 @@ $(function() {
 });
 
 function start() {
+	var playerColor = DEFAULT_COLOR;
+	$("#colorpicker").spectrum({
+		color: DEFAULT_COLOR,
+		move: function(tinycolor) { },
+		show: function(tinycolor) { },
+		hide: function(tinycolor) { },
+		beforeShow: function(tinycolor) { },
+		change: function(color) {
+			playerColor = color.toHexString(); // #ff0000
+			console.log("Your color: " + playerColor);
+		}         
+	});
 	$("#enterGame").click(function () {
-		socket.emit("enter", {name: $("playerName").val()});
+		socket.emit("enter", {name: $("#playerName").val(), color: playerColor});
 	});
 }
 $(start);
