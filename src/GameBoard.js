@@ -28,17 +28,21 @@ class GameBoard {
 	}
 
 	move(direction, dt, UUID) {
-		if (direction == "right") {
-			this.playerList[UUID].x += dt * 8;
-		}
-		if (direction == "left") {
-			this.playerList[UUID].x -= dt * 8;
-		}
-		if (direction == "up") {
-			this.playerList[UUID].x += dt * 8;
-		}
-		if (direction == "down") {
-			this.playerList[UUID].x -= dt * 8;
+		if(this.playerList[UUID]) {
+			//console.log(direction + " :: " + UUID);
+			//console.log(this.playerList[UUID].x);
+			if (direction.right) {
+				this.playerList[UUID].x += dt * 8;
+			}
+			if (direction.left) {
+				this.playerList[UUID].x -= dt * 8;
+			}
+			if (direction.up) {
+				this.playerList[UUID].y += dt * 8;
+			}
+			if (direction.down) {
+				this.playerList[UUID].y -= dt * 8;
+			}
 		}
 	}
 }

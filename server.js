@@ -32,6 +32,7 @@ var game = {};
 var url = 'mongodb://localhost:27017/Eet';
 
 var state = "main";
+var storedInput = [];
 
 app.use(express.static("pub"));
 app.use(bodyParser.urlencoded({extended: false})); //we can use req.body
@@ -87,6 +88,14 @@ io.on("connection", function(socket) {
 		console.log(plyr.name + " has successfully joined the game and chose this color: " + playerInfo.color);
 	});
 
+	socket.on('input', function(data) {
+		//Here we need to store the input for processing, game.board.move will be moved to main game loop eventually
+		storedInput.push({id: data.id, inputToProcess: {moves: data.inputs, dt: data.dt}});
+		game.board.move(data.inputs, data.dt, data.id);
+	});
+
+
+	//Serverside Main Update Loop
 	setInterval(function(){
 		if(state == "game") {
 			game.board.doFoodGeneration();
