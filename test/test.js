@@ -12,7 +12,7 @@ describe('Player', function() {
 
 	describe('#grow', function() {
 		it("should increase the player's size", function() {
-			var expected = 5;
+			var expected = 9;
 			aPlayer.grow(4);
 			var results = aPlayer.size;
   			assert.equal(expected, results);
