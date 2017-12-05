@@ -1,10 +1,26 @@
+var Player = require("./Player.js");
+
 class GameBoard {
 	constructor() {
 		this.playerList = {};
+		this.foods = 0;
 	}
 
 	addPlayer(player) {
 		this.playerList[player.id] = player;
+	}
+
+	doFoodGeneration() {
+		if(this.foods < 500 ) {
+			for(var i=0; i < 500; i++) {
+				this.playerList[i] = new Player("", "food");
+				this.foods++;
+			}
+		}
+	}
+
+	getPlayers() {
+		return this.playerList;
 	}
 
 	getNumPlayers() {
@@ -14,6 +30,15 @@ class GameBoard {
 	move(direction, dt, UUID) {
 		if (direction == "right") {
 			this.playerList[UUID].x += dt * 8;
+		}
+		if (direction == "left") {
+			this.playerList[UUID].x -= dt * 8;
+		}
+		if (direction == "up") {
+			this.playerList[UUID].x += dt * 8;
+		}
+		if (direction == "down") {
+			this.playerList[UUID].x -= dt * 8;
 		}
 	}
 }

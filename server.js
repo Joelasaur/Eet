@@ -31,6 +31,8 @@ var shop = {};
 var game = {};
 var url = 'mongodb://localhost:27017/Eet';
 
+var state = "main";
+
 app.use(express.static("pub"));
 app.use(bodyParser.urlencoded({extended: false})); //we can use req.body
 
@@ -56,7 +58,7 @@ mongoClient.connect(url, function(err, database) {
 //The socket is a different object each time a new client connects.
 io.on("connection", function(socket) {
 	console.log("Somebody connected.");
-	//Generate a new UUID, looks something like 
+	//Generate a new UUID, looks something like
 	//5b2ca132-64bd-4513-99da-90e838ca47d1
 	//and store this on their socket/connection
 	socket.userid = UUID();
@@ -74,17 +76,27 @@ io.on("connection", function(socket) {
 
 	socket.on('enter', function (playerInfo) {
 		console.log("Info sent from client: " + playerInfo);
+
 		var plyr = new Player(playerInfo.name, socket.userid, playerInfo.color);
 		game.addPlayerToDB(plyr);
 		game.joinGame(plyr);
+
+		socket.emit("enterGameCredents", socket.userid);
+		state = "game";
+
 		console.log(plyr.name + " has successfully joined the game and chose this color: " + playerInfo.color);
 	});
+
+	setInterval(function(){
+		if(state == "game") {
+			game.board.doFoodGeneration();
+			playerList = game.getPlayers();
+			socket.emit("update", playerList);
+		}
+	}, 60);
 
 });
 
 server.listen(gameport, function() {
 	console.log("Server is listening on port " + gameport);
 });
-
-
-

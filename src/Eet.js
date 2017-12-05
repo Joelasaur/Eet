@@ -2,10 +2,14 @@ var GameBoard = require("./GameBoard.js");
 
 class Eet {
 
-	// shopDB is a MongoDB database 
+	// shopDB is a MongoDB database
 	constructor(shopDB) {
 		this.shop = shopDB;
 		this.board = new GameBoard();
+	}
+
+	getPlayers() {
+		return this.board.getPlayers();
 	}
 
 	joinGame(player) {
