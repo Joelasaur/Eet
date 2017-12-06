@@ -12,7 +12,7 @@ describe('Player', function() {
 
 	describe('#grow', function() {
 		it("should increase the player's size", function() {
-			var expected = 9;
+			var expected = 12;
 			aPlayer.grow(4);
 			var results = aPlayer.size;
   			assert.equal(expected, results);
@@ -57,7 +57,7 @@ describe('GameBoard', function() {
 
 	describe('#move', function() {
 		it("should take a direction and delta time, and update the playerlist accordingly", function() {
-			var expected = 4; //Where we expect the player to be in the x direction after issuing a "move right" command.
+			var expected = 40; //Where we expect the player to be in the x direction after issuing a "move right" command.
 			aGameBoard.addPlayer(player1);
 			aGameBoard.move("right", player1.dt, player1.id);
 			results = aGameBoard.playerList[player1.id].x; 

@@ -78,7 +78,7 @@ io.on("connection", function(socket) {
 	socket.on('enter', function (playerInfo) {
 		console.log("Info sent from client: " + playerInfo);
 
-		var plyr = new Player(playerInfo.name, socket.userid, playerInfo.color, null);
+		var plyr = game.createOrGetPlayer(playerInfo.name, socket.userid, playerInfo.color);
 		game.addPlayerToDB(plyr);
 		game.joinGame(plyr);
 

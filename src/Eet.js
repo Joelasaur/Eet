@@ -1,4 +1,5 @@
 var GameBoard = require("./GameBoard.js");
+var Player = require("./Player.js");
 
 class Eet {
 
@@ -26,6 +27,12 @@ class Eet {
 				console.log("update successful");
 			}
 		});
+	}
+
+	createOrGetPlayer(name, id, color) {
+		//TODO: Get player from database
+		var player = new Player(name, id, color, null);
+		return player;
 	}
 }
 
