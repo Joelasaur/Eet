@@ -187,6 +187,9 @@ function start() {
 		      context.lineWidth = playerList[item].size / 32;
 		      context.strokeStyle = '#fff';
 
+					context.font = "12px Arial";
+					context.fillText(playerList[item].name, playerList[item].x - 20 - playerList[item].size, playerList[item].y - 20 - playerList[item].size);
+
 				} else { //Else just draw it
 
 		      context.arc(playerList[item].x, playerList[item].y, playerList[item].size, 0, 2 * Math.PI, false);
@@ -194,6 +197,9 @@ function start() {
 
 		      context.lineWidth = playerList[item].size / 32;
 		      context.strokeStyle = '#fff';
+
+					context.font = "12px Arial";
+					context.fillText(playerList[item].name, playerList[item].x - playerList[item].size, playerList[item].y - 20 - playerList[item].size);
 				}
 
 				context.fill();

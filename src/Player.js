@@ -7,6 +7,7 @@ class Player {
 			this.y = Math.floor(Math.random() * 700) + 5;
 			this.id = index;
 			this.col = "#3A3";
+			this.name = aName;
 		} else {
 			this.name = aName;
 			this.id = anID;
