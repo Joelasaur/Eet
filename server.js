@@ -78,7 +78,7 @@ io.on("connection", function(socket) {
 	socket.on('enter', function (playerInfo) {
 		console.log("Info sent from client: " + playerInfo);
 
-		var plyr = new Player(playerInfo.name, socket.userid, playerInfo.color);
+		var plyr = new Player(playerInfo.name, socket.userid, playerInfo.color, null);
 		game.addPlayerToDB(plyr);
 		game.joinGame(plyr);
 
@@ -94,12 +94,28 @@ io.on("connection", function(socket) {
 		game.board.move(data.inputs, data.dt, data.id);
 	});
 
+	socket.on('collision', function(data) {
+		var playerList = game.getPlayers();
+		//console.log(data.id1);
+		//console.log(data.id2);
+		if(playerList[data.id1] && playerList[data.id2]) {
+			if(playerList[data.id1].size > playerList[data.id2].size) {
+				game.board.growPlayer(data.id1, playerList[data.id2].size);
+				game.board.killPlayer(data.id2);
+			}
+			if(playerList[data.id1].size < playerList[data.id2].size) {
+				game.board.growPlayer(data.id2, playerList[data.id1].size);
+				game.board.killPlayer(data.id1);
+			}
+		}
+	});
 
 	//Serverside Main Update Loop
 	setInterval(function(){
 		if(state == "game") {
 			game.board.doFoodGeneration();
 			playerList = game.getPlayers();
+
 			socket.emit("update", playerList);
 		}
 	}, 1000 / 30);

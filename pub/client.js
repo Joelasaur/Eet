@@ -18,7 +18,30 @@ var myID = "";
 
 var state = "main";
 
+var offsetX = 0;
+var offsetY = 0;
+var scale = 1;
+
 var playerList = {};
+
+var move = function(direction, dt, UUID) {
+	if(this.playerList[UUID]) {
+		//console.log(direction + " :: " + UUID);
+		//console.log(this.playerList[UUID].x);
+		if (direction.right) {
+			this.playerList[UUID].x += dt * .2;
+		}
+		if (direction.left) {
+			this.playerList[UUID].x -= dt * .2;
+		}
+		if (direction.up) {
+			this.playerList[UUID].y -= dt * .2;
+		}
+		if (direction.down) {
+			this.playerList[UUID].y += dt * .2;
+		}
+	}
+}
 
 $(function() {
 	socket.on('onconnected', function( data ) {
@@ -112,37 +135,65 @@ function start() {
 	  	var currentTime = (new Date()).getTime();
 	  	var dt = currentTime - lastUpdateTime;
 
+			move(input, dt, myID);
+
+
 			socket.emit("input", {id: myID, dt: dt, inputs: input});
 
 			context.save();
-			context.clearRect(0, 0, canvas.width, canvas.height);
+			//console.log("OFFSETX - " + offsetX + " OFFSETY - " + offsetY);
+			context.translate(offsetX, offsetY);
+
+			context.clearRect(-offsetX, -offsetY, canvas.width, canvas.height);
 
 			//Drawing our list of players
 			for (var item in playerList) {
 
+				// -- HIT DETECTION
+				for (var hitmebaby in playerList) {
+					if(playerList[item].id != playerList[hitmebaby].id) {
+
+						var p1x = Math.max(playerList[item].x, playerList[hitmebaby].x);
+						var p1y = Math.max(playerList[item].y, playerList[hitmebaby].y);
+
+						var p2x = Math.min(playerList[item].x+playerList[item].size, playerList[hitmebaby].x+playerList[hitmebaby].size);
+						var p2y = Math.min(playerList[item].y+playerList[item].size, playerList[hitmebaby].y+playerList[hitmebaby].size);
+
+						if(p2x-p1x > 0 && p2y-p1y > 0) {
+							console.log("WE COLLIDIN");
+							socket.emit('collision', {id1: playerList[item].id, id2: playerList[hitmebaby].id});
+						}
+					}
+				}
+
+
+				// -- DRAWING
 				context.beginPath();
 
 				//If the item in the list is our player, draw and set context/scale (game-window)
 				if(item == myID) {
-					console.log("X : " + playerList[item].x);
-					console.log("Y : " + playerList[item].y);
-					console.log("Scale : " + (20/ playerList[item].size));
+					//console.log("X : " + playerList[item].x);
+					//console.log("Y : " + playerList[item].y);
+					//console.log("Scale : " + (20/ playerList[item].size));
+						//CAMERA MOVEMENT SOMEDAY
+					//offsetX = ((playerList[item].x) - (canvas.width/2));
+					//offsetY = ((playerList[item].y) - (canvas.height/2));
+					//scale = (10/playerList[item].size);
+					//context.arc(playerList[item].x - offsetX, playerList[item].y - offsetY, playerList[item].size, 0, 2 * Math.PI, false);
 
 		      context.arc(playerList[item].x, playerList[item].y, playerList[item].size, 0, 2 * Math.PI, false);
-		      context.fillStyle = playerColor;
+		      context.fillStyle = playerList[item].col;
 
-		      context.lineWidth = 3;
-		      context.strokeStyle = '#003300';
+		      context.lineWidth = playerList[item].size / 32;
+		      context.strokeStyle = '#fff';
 
-					context.translate(playerList[item].x + (canvas.width/2), playerList[item].y + (canvas.height/2));
-					context.scale(20 / playerList[item].size, 20 / playerList[item].size);
 				} else { //Else just draw it
 
 		      context.arc(playerList[item].x, playerList[item].y, playerList[item].size, 0, 2 * Math.PI, false);
-		      context.fillStyle = DEFAULT_COLOR;
+		      context.fillStyle = playerList[item].col;
 
-		      context.lineWidth = 3;
-		      context.strokeStyle = '#003300';
+		      context.lineWidth = playerList[item].size / 32;
+		      context.strokeStyle = '#fff';
 				}
 
 				context.fill();

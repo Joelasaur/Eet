@@ -11,12 +11,24 @@ class GameBoard {
 	}
 
 	doFoodGeneration() {
-		if(this.foods < 500 ) {
-			for(var i=0; i < 500; i++) {
-				this.playerList[i] = new Player("", "food");
+		if(this.foods < 100 ) {
+			for(var i=0; i < 25; i++) {
+				this.playerList[this.foods] = new Player("", "food", "#567", this.foods);
 				this.foods++;
 			}
 		}
+	}
+
+	growPlayer(id, sizeToAdd) {
+		this.playerList[id].grow(sizeToAdd);
+	}
+
+	killPlayer(id) {
+		this.playerList[id].kill();
+
+		this.foods--;
+		//var index = this.playerList.indexOf(id);
+		//this.playerList.splice(index, 1);
 	}
 
 	getPlayers() {
@@ -32,16 +44,16 @@ class GameBoard {
 			//console.log(direction + " :: " + UUID);
 			//console.log(this.playerList[UUID].x);
 			if (direction.right) {
-				this.playerList[UUID].x += dt * .5;
+				this.playerList[UUID].x += dt * .2;
 			}
 			if (direction.left) {
-				this.playerList[UUID].x -= dt * .5;
+				this.playerList[UUID].x -= dt * .2;
 			}
 			if (direction.up) {
-				this.playerList[UUID].y -= dt * .5;
+				this.playerList[UUID].y -= dt * .2;
 			}
 			if (direction.down) {
-				this.playerList[UUID].y += dt * .5;
+				this.playerList[UUID].y += dt * .2;
 			}
 		}
 	}
