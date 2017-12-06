@@ -32,6 +32,7 @@ var game = {};
 var url = 'mongodb://localhost:27017/Eet';
 
 var state = "main";
+var storedInput = [];
 
 app.use(express.static("pub"));
 app.use(bodyParser.urlencoded({extended: false})); //we can use req.body
@@ -44,9 +45,14 @@ mongoClient.connect(url, function(err, database) {
 	else {
 		console.log("Connected to Mongo and now creating server.");
 		shop = database;
+		shop.createCollection("players", function(err,res){
+			if(err) throw err;
+			console.log("Collection created!");
+		});
 		game = new Eet(shop);
 	}
 });
+
 
 
 //Every time a client connects (visits the page) this function(socket) {...} gets executed.
@@ -70,27 +76,35 @@ io.on("connection", function(socket) {
 	});
 
 	socket.on('enter', function (playerInfo) {
-		state = "game";
 		console.log("Info sent from client: " + playerInfo);
-		var plyr = new Player(playerInfo.name, socket.userid);
+
+		var plyr = new Player(playerInfo.name, socket.userid, playerInfo.color);
+		game.addPlayerToDB(plyr);
 		game.joinGame(plyr);
 
 		socket.emit("enterGameCredents", socket.userid);
+		state = "game";
 
 		console.log(plyr.name + " has successfully joined the game and chose this color: " + playerInfo.color);
 	});
 
+	socket.on('input', function(data) {
+		//Here we need to store the input for processing, game.board.move will be moved to main game loop eventually
+		storedInput.push({id: data.id, inputToProcess: {moves: data.inputs, dt: data.dt}});
+		game.board.move(data.inputs, data.dt, data.id);
+	});
+
+
+	//Serverside Main Update Loop
 	setInterval(function(){
 		if(state == "game") {
 			game.board.doFoodGeneration();
 			playerList = game.getPlayers();
 			socket.emit("update", playerList);
 		}
-	}, 60);
+	}, 1000 / 30);
 
 });
-
-
 
 server.listen(gameport, function() {
 	console.log("Server is listening on port " + gameport);

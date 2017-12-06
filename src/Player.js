@@ -1,4 +1,5 @@
 class Player {
+
 	constructor(aName, anID) {
 		if(aName == "" && anID == "food") {
 			this.size = .5;
