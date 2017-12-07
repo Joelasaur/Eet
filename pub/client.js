@@ -138,7 +138,7 @@ function start() {
 			move(input, dt, myID);
 
 
-			socket.emit("input", {id: myID, dt: dt, inputs: input});
+			socket.emit("input", {id: myID, dt: dt, inputs: input, canvasW: canvas.width, canvasH: canvas.height});
 
 			context.save();
 			//console.log("OFFSETX - " + offsetX + " OFFSETY - " + offsetY);

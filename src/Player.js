@@ -20,7 +20,15 @@ class Player {
 	}
 
 	grow(amount) {
-		this.size += amount;
+		if((this.size + amount) >= 50) {
+			this.size = 50;
+		} else {
+			this.size += amount;
+		}
+	}
+
+	deteriate() {
+		this.size--;
 	}
 
 	kill() {

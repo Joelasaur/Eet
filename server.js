@@ -78,7 +78,7 @@ io.on("connection", function(socket) {
 	socket.on('enter', function (playerInfo) {
 		console.log("Info sent from client: " + playerInfo);
 
-		var plyr = game.createOrGetPlayer(playerInfo.name, socket.userid, playerInfo.color);
+		var plyr = new Player(playerInfo.name, socket.userid, playerInfo.color, null);
 		game.addPlayerToDB(plyr);
 		game.joinGame(plyr);
 
@@ -91,7 +91,7 @@ io.on("connection", function(socket) {
 	socket.on('input', function(data) {
 		//Here we need to store the input for processing, game.board.move will be moved to main game loop eventually
 		storedInput.push({id: data.id, inputToProcess: {moves: data.inputs, dt: data.dt}});
-		game.board.move(data.inputs, data.dt, data.id);
+		game.board.move(data.inputs, data.dt, data.id, data.canvasW, data.canvasH);
 	});
 
 	socket.on('collision', function(data) {
@@ -113,12 +113,19 @@ io.on("connection", function(socket) {
 	//Serverside Main Update Loop
 	setInterval(function(){
 		if(state == "game") {
-			game.board.doFoodGeneration();
 			playerList = game.getPlayers();
 
 			socket.emit("update", playerList);
 		}
 	}, 1000 / 30);
+
+	//Deteriation interval
+	setInterval(function(){
+		if(state == "game") {
+			game.board.doFoodGeneration();
+			game.board.doDeteriation();
+		}
+	}, 1000 * 1.5);
 
 });
 

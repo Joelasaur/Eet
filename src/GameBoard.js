@@ -19,6 +19,14 @@ class GameBoard {
 		}
 	}
 
+	doDeteriation() {
+		for(var item in this.playerList) {
+			if(this.playerList[item].size > 12) {
+				this.playerList[item].deteriate();
+			}
+		}
+	}
+
 	growPlayer(id, sizeToAdd) {
 		this.playerList[id].grow(sizeToAdd);
 	}
@@ -39,7 +47,7 @@ class GameBoard {
 		return Object.keys(this.playerList).length;
 	}
 
-	move(direction, dt, UUID) {
+	move(direction, dt, UUID, canvasW, canvasH) {
 		if(this.playerList[UUID]) {
 			//console.log(direction + " :: " + UUID);
 			//console.log(this.playerList[UUID].x);
@@ -54,6 +62,23 @@ class GameBoard {
 			}
 			if (direction.down) {
 				this.playerList[UUID].y += dt * .2;
+			}
+
+			//MAP BOUNDS
+			if(this.playerList[UUID].x - this.playerList[UUID].size <= 0) {
+				this.playerList[UUID].x = 0 + this.playerList[UUID].size;
+			}
+
+			if(this.playerList[UUID].y - this.playerList[UUID].size <= 0) {
+				this.playerList[UUID].y = 0 + this.playerList[UUID].size;
+			}
+
+			if((this.playerList[UUID].x + this.playerList[UUID].size) >= canvasW) {
+				this.playerList[UUID].x = canvasW - this.playerList[UUID].size;
+			}
+
+			if((this.playerList[UUID].y + this.playerList[UUID].size) >= canvasH) {
+				this.playerList[UUID].y = canvasH - this.playerList[UUID].size;
 			}
 		}
 	}
