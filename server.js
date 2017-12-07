@@ -125,7 +125,7 @@ io.on("connection", function(socket) {
 			game.board.doFoodGeneration();
 			game.board.doDeteriation();
 		}
-	}, 1000 * 1.5);
+	}, 1000 * 2.5);
 
 });
 

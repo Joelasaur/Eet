@@ -4,6 +4,12 @@ Multiplayer resource gathering game
 
 
 
-Great resource on multiplayer games using socket.io: http://buildnewgames.com/real-time-multiplayer/
+Resources:
+
+http://buildnewgames.com/real-time-multiplayer/
+
+http://www.gabrielgambetta.com/client-server-game-architecture.html
+
+
 
 How to start mongodb: sudo mongod --dbpath shop/db
